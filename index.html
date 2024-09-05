@@ -76,13 +76,17 @@
         </form>
 
         <div class="message" id="thankYouMessage">
-            Thanks for trying LinkBolt! <br><br>Please check your email for your short link.
+            Thanks for trying LinkBolt!<br><br>
+            Please check your email (<span id="userEmail"></span>) for your short link.
         </div>
     </div>
 
     <script>
         document.getElementById('linkboltForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
+
+            // Get the user's email address from the form
+            var emailInput = document.getElementById('email').value;
 
             // Send the form data using AJAX
             var xhr = new XMLHttpRequest();
@@ -94,6 +98,7 @@
                 if (xhr.status === 200) {
                     // Hide the form and show the thank you message
                     form.style.display = 'none';
+                    document.getElementById('userEmail').textContent = emailInput; // Set the user's email in the message
                     document.getElementById('thankYouMessage').style.display = 'block';
                 }
             };
@@ -103,4 +108,5 @@
 
 </body>
 </html>
+
 
