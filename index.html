@@ -21,7 +21,7 @@
             border-radius: 10px;
             width: 300px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box; /* Ensure the container includes padding in width */
+            box-sizing: border-box;
         }
         label {
             display: block;
@@ -37,7 +37,7 @@
             border-radius: 5px;
             background-color: white;
             color: black;
-            box-sizing: border-box; /* Ensures padding and borders are included in width */
+            box-sizing: border-box;
         }
         button {
             width: 100%;
@@ -48,7 +48,7 @@
             color: black;
             font-size: 16px;
             cursor: pointer;
-            box-sizing: border-box; /* Ensures padding and borders are included in width */
+            box-sizing: border-box;
         }
         button:hover {
             background-color: black;
@@ -85,28 +85,43 @@
         document.getElementById('linkboltForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
 
-            // Get the user's email address from the form
+            // Get the user's email address from the form before submission
             var emailInput = document.getElementById('email').value;
 
-            // Send the form data using AJAX
-            var xhr = new XMLHttpRequest();
-            var form = document.getElementById('linkboltForm');
-            var formData = new FormData(form);
+            // Capture IP address using a third-party service (ipinfo.io)
+            var ipAddress = ''; // Variable to store IP address
+            var xhrIP = new XMLHttpRequest();
+            xhrIP.open('GET', 'https://ipinfo.io/json', true);
+            xhrIP.onload = function() {
+                if (xhrIP.status === 200) {
+                    var response = JSON.parse(xhrIP.responseText);
+                    ipAddress = response.ip; // Store the IP address
+                    console.log('User IP:', ipAddress); // Log the IP
 
-            xhr.open('POST', form.action, true);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    // Hide the form and show the thank you message
-                    form.style.display = 'none';
-                    document.getElementById('userEmail').textContent = emailInput; // Set the user's email in the message
-                    document.getElementById('thankYouMessage').style.display = 'block';
+                    // Now send the form data including the IP address to Zapier
+                    var xhr = new XMLHttpRequest();
+                    var form = document.getElementById('linkboltForm');
+                    var formData = new FormData(form);
+
+                    // Optionally append the IP address to the form data
+                    formData.append('user_ip', ipAddress); 
+
+                    xhr.open('POST', form.action, true);
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            // Hide the form and show the thank you message
+                            form.style.display = 'none';
+                            document.getElementById('userEmail').textContent = emailInput; // Set the user's email in the message
+                            document.getElementById('thankYouMessage').style.display = 'block';
+                        }
+                    };
+                    xhr.send(formData);
                 }
             };
-            xhr.send(formData);
+            xhrIP.send();
         });
     </script>
 
 </body>
 </html>
-
 
