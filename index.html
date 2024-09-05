@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: white;
+            border: 1px solid black;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: black;
+        }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid black;
+            border-radius: 5px;
+            background-color: white;
+            color: black;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid black;
+            border-radius: 5px;
+            background-color: white;
+            color: black;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: black;
+            color: white;
+        }
+        .message {
+            display: none;
+            color: black;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <form id="linkboltForm" action="https://hooks.zapier.com/hooks/catch/13785444/2tces86/" method="POST">
+            <label for="long_url">Your Long URL:</label>
+            <input type="text" id="long_url" name="long_url" required>
+
+            <label for="email">Your Email Address:</label>
+            <input type="email" id="email" name="email" required>
+
+            <button type="submit">Get My Short Link</button>
+        </form>
+
+        <div class="message" id="thankYouMessage">
+            Thanks for trying LinkBolt! Please check your email for your short link.
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('linkboltForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Send the form data using AJAX
+            var xhr = new XMLHttpRequest();
+            var form = document.getElementById('linkboltForm');
+            var formData = new FormData(form);
+
+            xhr.open('POST', form.action, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // Hide the form and show the thank you message
+                    form.style.display = 'none';
+                    document.getElementById('thankYouMessage').style.display = 'block';
+                }
+            };
+            xhr.send(formData);
+        });
+    </script>
+
+</body>
+</html>
